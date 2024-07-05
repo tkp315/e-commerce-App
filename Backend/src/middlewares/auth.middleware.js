@@ -2,7 +2,7 @@ import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import ApiError from "../utilities/apiError.js";
 import asyncHandlerFunction from "../utilities/asyncHandler.js";
-import { redirect } from "react-router-dom";
+
 
 const verifyJWT = asyncHandlerFunction(async (req, res, next) => {
   try {
@@ -22,7 +22,8 @@ const verifyJWT = asyncHandlerFunction(async (req, res, next) => {
     );
 
     if (!user) {
-      redirect("http://localhost:3000/login")
+      // redirect("http://localhost:3000/login")
+      
       throw new ApiError(401, "Invalid Access Token");
     }
 

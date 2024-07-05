@@ -9,7 +9,7 @@ import { User } from "../models/user.model.js";
 import { OrderList } from "../models/orders.model.js";
 import { DeliveryTracking } from "../models/deliveryTracking.model.js";
 import { ApiResponse } from "../utilities/apiResponse.js";
-import { redirect } from "react-router-dom";
+
 import { Payment } from "../models/payment.model.js";
 
 
@@ -180,9 +180,9 @@ const verifySignature = asyncHandlerFunction(async (req, res) => {
       { new: true }
     );
 
-    redirect(
-      `http://localhost:3000/payment/verify?refrence=${req.body.razorpay_payment_id}`
-    );
+    // redirect(
+    //   `http://localhost:3000/payment/verify?refrence=${req.body.razorpay_payment_id}`
+    // );
   }
 
   res.send(response);
