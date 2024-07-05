@@ -6,105 +6,116 @@ import ApiError from "../utilities/apiError.js";
 import { ApiResponse } from "../utilities/apiResponse.js";
 import asyncHandlerFunction from "../utilities/asyncHandler.js";
 
-const createAddress =asyncHandlerFunction(async(req,res)=>
-{
-    // take data from req,
-    // validate
-    // search in location if this pin is available or not for delivering the products
-    // create address in addressList,
-    // add in user also
-    // user from req.user._id
+const createAddress = asyncHandlerFunction(async (req, res) => {
 
-    // return res
+  const { city, ward, pincode, contact } = req.body;
 
-    const{city,ward,pincode,contact} =req.body;
-    const userId =req.user._id;
-    const uid = new mongoose.Types.ObjectId(userId);
-    if([city,ward,pincode,contact].some((e)=>e===""))
+  const userId = req.user._id;
+
+  const uid = new mongoose.Types.ObjectId(userId);
+
+  if ([city, ward, pincode, contact].some((e) => e === "")) {
+    throw new ApiError("some fields are missing");
+  }
+
+  const getAvailablePin = await Locations.findOne({ pinOfAddress: pincode });
+ 
+  if (!getAvailablePin) {
+    throw new ApiError(401, "Sorry we are not at this location");
+  }
+
+  const newAddress = await AddressList.create({
+    city: city,
+    ward: ward,
+    pincode: pincode,
+    contact: contact,
+  });
+
+  const addOfUser = await User.findByIdAndUpdate(
+    uid,
     {
-        throw new ApiError("some fields are missing");
-    }
+      $push: {
+        addressList: newAddress._id,
+      },
+    },
+    { new: true }
+  );
 
-    const getAvailablePin=await Locations.findOne({pinOfAddress:pincode});
-    console.log("pin is :",getAvailablePin)
-    if(!getAvailablePin)
+  return res
+    .status(200)
+    .json(new ApiResponse(200,{ addOfUser, newAddress },"Address is created successfully"));
+});
+
+const getAllAddress = asyncHandlerFunction(async (req, res) => {
+
+  const userId = await req.user._id;
+
+  const uid = new mongoose.Types.ObjectId(userId);
+
+  const findUser = await User.findById(uid);
+
+  const addresses = await findUser.populate("addressList");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { addresses }, "all addresses of a user"));
+});
+
+const editAddress = asyncHandlerFunction(async (req, res) => {
+
+  const { newCity, newWard, newPincode, newContact, addressId } = req.body;
+
+  const userId = req.user._id;
+
+  const uid = new mongoose.Types.ObjectId(userId);
+
+  const aid = new mongoose.Types.ObjectId(addressId);
+
+  const user = await User.findById(uid);
+
+  const address = await AddressList.findById(aid);
+
+  const city = address.city;
+  const pincode = address.pincode;
+  const contact = address.contact;
+  const ward = address.ward;
+
+  const updatedData = address.updateOne(
     {
-        throw new ApiError(401,'Sorry we are not at this location');
-    }
+      city: newCity ? newCity : city,
+      pincode: newPincode ? newPincode : pincode,
+      contact: newContact ? newContact : contact,
+      ward: newWard ? newWard : ward,
+    },
+    { new: true }
+  );
 
-   const newAddress= await AddressList.create(
-    {
-        city:city,
-        ward: ward,
-        pincode:pincode,
-        contact:contact
-    }
-   )
-   const addOfUser = await User.findByIdAndUpdate(uid,
-   {
-    $push:{
-        addressList:newAddress._id
-    }
-   },{new:true}
-   )
+  if (!updatedData) {
+    throw new ApiError(401, "data is not updated");
+  }
 
-   return res
-   .status(200)
-   .json(new ApiResponse(200,{addOfUser,newAddress},'Address is created successfully'))
-})
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { updatedData, user },
+        "address is successfully edited"
+      )
+    );
+});
 
-const getAllAddress =asyncHandlerFunction(async(req,res)=>
-{
-// take user
-// populate user.addressList
-const userId = await req.user._id;
-const uid = new mongoose.Types.ObjectId(userId)
-const findUser= await User.findById(uid);
-const addresses=await findUser.populate("addressList")
+const deleteAddress = asyncHandlerFunction(async (req, res) => {
 
-return res.status(200).json(new ApiResponse(200,{addresses},"all addresses of a user"));
-})
+  const { addressId } = req.body;
 
-//edit address
+  const aid = new mongoose.Types.ObjectId(addressId);
 
-const editAddress= asyncHandlerFunction(async(req,res)=>
-{
-    const {newCity,newWard,newPincode,newContact ,addressId}=req.body;
-    const userId = req.user._id;
-    const uid = new mongoose.Types.ObjectId(userId);
-    const aid =new mongoose.Types.ObjectId(addressId);
-  
-    const user = await User.findById(uid);
-    const address = await AddressList.findById(aid);
-    const city = address.city;
-    const pincode = address.pincode;
-    const contact = address.contact;
-    const ward = address.ward
+  await AddressList.findByIdAndDelete(aid);
 
-    const updatedData = address.updateOne({
-        city:newCity?newCity:city,
-        pincode:newPincode?newPincode:pincode,
-        contact:newContact?newContact:contact,
-        ward:newWard?newWard:ward,
-},{new:true})
+  return res
+  .status(200)
+  .json(new ApiResponse(200, {}, "data is clear"));
+});
 
-if(!updatedData)
-{
-    throw new ApiError(401,"data is not updated")
-}
-return res.status(200).json(new ApiResponse(200,{updatedData,user},"address is successfully edited"))
-
-    
-})
-//delete address
-
-const deleteAddress = asyncHandlerFunction(async(req,res)=>
-{
-    const {addressId}=req.body;
-    const aid = new mongoose.Types.ObjectId(addressId);
-
-    await AddressList.findByIdAndDelete(aid);
-    return res.status(200).json(new ApiResponse(200,{},"data is clear"))
-})
-
-export{getAllAddress,createAddress,editAddress,deleteAddress};
+export { getAllAddress, createAddress, editAddress, deleteAddress };

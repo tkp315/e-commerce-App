@@ -3,10 +3,10 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { orderTracking } from '../../../Redux/Slices/trakingSlice';
 import { HomeLayout } from '../../../Layouts/HomeLayout';
-import toast from 'react-hot-toast';
+
 
  function OrderTracking() {
-    const [status,setStatus]=useState("");
+   
     const {oid,tid}=useParams();
     const [orderStatus,setOrderStatus]=useState([])
 const dispatch = useDispatch();
@@ -18,6 +18,7 @@ const dispatch = useDispatch();
     }
     useEffect(()=>{
         ordertrack()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[dispatch])
   
   return (

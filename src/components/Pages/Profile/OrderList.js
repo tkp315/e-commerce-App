@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom';
+
 import { getOrderList } from '../../../Redux/Slices/profileSlice';
 import { HomeLayout } from '../../../Layouts/HomeLayout';
 import CartCard from '../../../Helpers/CartCard';
@@ -8,12 +8,12 @@ import CartCard from '../../../Helpers/CartCard';
 function OrderList  () {
 
     const dispatch = useDispatch();
-    const navigate= useNavigate();
+  
     const [orderArray,setOrderList]=useState([]);
-    const[paymentInfo,setPaymentInfo]=useState({});
-    const[deliveryAddress,setDeliveryAddress]=useState([])
-    const[deliveryStatus,setDeliveryStatus]=useState("");
-    const[product,setProduct]=useState({});
+   
+   
+   
+   
     
     async function List()
     {
@@ -26,6 +26,7 @@ function OrderList  () {
     }
 useEffect(()=>{
     List()
+// eslint-disable-next-line react-hooks/exhaustive-deps
 },[dispatch])
   return (
    <HomeLayout>

@@ -3,10 +3,10 @@ import ApiError from "../utilities/apiError.js";
 import asyncHandlerFunction from "../utilities/asyncHandler.js";
 // import { User } from "../models/user.model.js";
 import { OrderPlacement } from "../models/orderDetails.model.js";
-import { DeliveryTracking } from "../models/deliveryTracking.model.js";
+
 import { ApiResponse } from "../utilities/apiResponse.js";
-import { User } from "../models/user.model.js";
-import { sendMail } from "../utilities/mailSender.js";
+
+
 
 const trackOrder = asyncHandlerFunction(async(req,res)=>
 {
@@ -16,10 +16,9 @@ const trackOrder = asyncHandlerFunction(async(req,res)=>
         throw new ApiError(401,"Tracking id not found");
     }
 
-    const userId = req.user._id;
-    const uid = new mongoose.Types.ObjectId(userId);
+   
     const oid = new mongoose.Types.ObjectId(orderId);
-  const user = await User.findById(userId);
+
 
   
 
@@ -44,7 +43,6 @@ if(trackId!==trackingId)
 throw new ApiError(401,"Enter id");    
 }
 
-const email = user.email;
 
 
 

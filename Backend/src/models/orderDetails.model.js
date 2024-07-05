@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import crypto from "crypto";
 import { sendMail } from "../utilities/mailSender.js";
 import { User } from "./user.model.js";
-import { DeliveryTracking } from "./deliveryTracking.model.js";
+
 
 const orderPlacementSchema = new Schema({
   customer: {
@@ -55,7 +55,7 @@ orderPlacementSchema.post("save", async function (doc, next) {
   const user = await User.findById(doc.customer);
   if (user) {
     const email = user.email;
-    const url = `http://localhost:8003/api/v1/order/tracking/${doc.trackingId}`;
+  
     await sendMail(`Tracking ID: ${doc.trackingId}`, email, "Order Placed");
   }
   next();

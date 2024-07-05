@@ -1,11 +1,17 @@
 import express, { json } from "express";
 import cors from'cors';
 import cookieParser from "cookie-parser";
-
+import router from "./routes/user.route.js";
+import { profileRoute } from "./routes/profile.route.js";
+import { addressRoute } from "./routes/address.route.js";
+import { productRoute } from "./routes/product.route.js";
+import { paymentRoute } from "./routes/payment.route.js";
+import { categoryRoute } from "./routes/category.route.js";
+import { trackingRoute } from "./routes/tracking.route.js";
 
 const app = express();
 
-const port = process.env.PORT || 3003;
+
 
 app.use(cors(
     {
@@ -26,13 +32,7 @@ app.use(json(
 app.use(express.static("public"));
 app.use(express.urlencoded({extended:true}))
 
-import router from "./routes/user.route.js";
-import { profileRoute } from "./routes/profile.route.js";
-import { addressRoute } from "./routes/address.route.js";
-import { productRoute } from "./routes/product.route.js";
-import { paymentRoute } from "./routes/payment.route.js";
-import { categoryRoute } from "./routes/category.route.js";
-import { trackingRoute } from "./routes/tracking.route.js";
+
 
 app.use('/api/v1/user',router);
 app.use('/api/v1/profile',profileRoute);

@@ -1,12 +1,12 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom"
-import { useLocation } from "react-router-dom";
+
 import { removeFromCart } from "../Redux/Slices/productSlice";
 
 function CartCard({data,isButton,orderId,trackId})
 {
 const navigate = useNavigate();
-const {state} = useLocation();
+
 const dispatch = useDispatch();
 async function remove(){
     const res = await dispatch(removeFromCart({productId:data.productId}))

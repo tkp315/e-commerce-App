@@ -13,7 +13,7 @@ import Denied from './components/Denied';
 import ProductList from './components/Pages/Products/ProductList';
 import ProductDetails from './components/Pages/Products/ProductDetails';
 import Profile from './components/Pages/Profile';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import AddCategory from './components/Pages/Category/AddCategory';
 import RequireAuth from './components/Auth/RequireAuth';
 import GetAllCategory from './components/Pages/Category/GetAllCategory';
@@ -36,7 +36,7 @@ import UpdateStatus from './Admin/UpdateStatus';
 
 function App() {
 
-    const data = useSelector((state)=>state.product.productData);
+    // const data = useSelector((state)=>state.product.productData);
     console.log(window)
 
 return(<div>

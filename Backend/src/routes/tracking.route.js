@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { isAdmin, isCustormer, verifyJWT } from "../middlewares/auth.middleware.js";
+import { isAdmin,  verifyJWT } from "../middlewares/auth.middleware.js";
 import { Orders } from "../controllers/allOrders.controller.js";
 import { updateDeliveryStatus } from "../controllers/deliveryupdate.controller.js";
 import { trackOrder } from "../controllers/orderTracking.controller.js";
