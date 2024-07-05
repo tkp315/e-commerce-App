@@ -13,9 +13,7 @@ profileRoute.route("/add-profile").post(verifyJWT,addDetails);
 profileRoute.route("/details").post(verifyJWT,getUserDetails)
 profileRoute.route("/update-profile").post(verifyJWT,editDetails)
 profileRoute.route("/update-profileImage").post(verifyJWT, upload.single("newProfilePhoto"),changePhoto)
-// profileRoute.route("/delete-profile")
 profileRoute.route("/add-sellerAccount").post(verifyJWT,addSellerAccount)
-
 profileRoute.route("/my-orders").post(verifyJWT,getOrderList);
 
 export {profileRoute}

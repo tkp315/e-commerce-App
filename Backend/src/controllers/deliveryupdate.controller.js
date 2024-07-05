@@ -1,4 +1,3 @@
-
 import { OrderPlacement } from "../models/orderDetails.model.js";
 import { DeliveryTracking } from "../models/deliveryTracking.model.js";
 import asyncHandlerFunction from "../utilities/asyncHandler.js";
@@ -6,6 +5,7 @@ import ApiError from "../utilities/apiError.js";
 import { ApiResponse } from "../utilities/apiResponse.js";
 
 const updateDeliveryStatus = asyncHandlerFunction(async (req, res) => {
+
   const { orderId, newStatus } = req.body;
 
   if (!orderId) {
@@ -13,6 +13,7 @@ const updateDeliveryStatus = asyncHandlerFunction(async (req, res) => {
   }
 
   const orderDetails = await OrderPlacement.findById(orderId);
+
   if (!orderDetails) {
     throw new ApiError(404, "Order not found");
   }
@@ -38,10 +39,12 @@ const updateDeliveryStatus = asyncHandlerFunction(async (req, res) => {
   await delivery.save();
 
   const updateInOrderDetails = await orderDetails.updateOne({
-    deliveryStatus: delivery._id
+    deliveryStatus: delivery._id,
   });
 
-  res.status(200).json(new ApiResponse(200, { delivery, orderDetails, updateInOrderDetails }, "Delivery status updated successfully"));
+  res
+    .status(200)
+    .json(new ApiResponse(200,{ delivery, orderDetails, updateInOrderDetails },"Delivery status updated successfully"));
 });
 
 export { updateDeliveryStatus };

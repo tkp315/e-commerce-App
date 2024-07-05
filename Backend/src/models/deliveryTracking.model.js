@@ -1,34 +1,46 @@
 import mongoose, { Schema } from "mongoose";
 
-const deliveryTrackingSchema = new Schema({
-  customer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
-  },
-  seller: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
-  },
-  deliveryUpdates: [
-    {
-      status: {
-        type: String,
-        enum: ["Pending", "Shipped", "Out For Delivery", "Delivered", "Failed"]
+const deliveryTrackingSchema = new Schema(
+  {
+    customer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    deliveryUpdates: [
+      {
+        status: {
+          type: String,
+          enum: [
+            "Pending",
+            "Shipped",
+            "Out For Delivery",
+            "Delivered",
+            "Failed",
+          ],
+        },
+        timestamp: {
+          type: Date,
+          default: Date.now,
+        },
       },
-      timestamp: {
-        type: Date,
-        default: Date.now
-      }
-    }
-  ],
-  deliveryStatus: {
-    type: String,
-    enum: ["Pending", "Shipped", "Out For Delivery", "Delivered"],
-    default: "Pending"
+    ],
+    deliveryStatus: {
+      type: String,
+      enum: ["Pending", "Shipped", "Out For Delivery", "Delivered"],
+      default: "Pending",
+    },
+    trackingId: {
+      type: String,
+    },
   },
-  trackingId: {
-    type:String,    
-  }
-}, { timestamps: true });
+  { timestamps: true }
+);
 
-export const DeliveryTracking = mongoose.model("DeliveryTracking", deliveryTrackingSchema);
+export const DeliveryTracking = mongoose.model(
+  "DeliveryTracking",
+  deliveryTrackingSchema
+);

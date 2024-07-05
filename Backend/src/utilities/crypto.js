@@ -1,13 +1,13 @@
 import crypto from 'crypto';
 
-// Ensure that your ENCRYPTION_KEY is a 64-character hexadecimal string (32 bytes)
 const algorithm = 'aes-256-cbc';
 
-// Read the encryption key from the environment variable and ensure it's a valid length
 const keyHex = process.env.ENCRYPTION_KEY;
+
 if (!keyHex || keyHex.length !== 64) {
   throw new Error('Invalid ENCRYPTION_KEY. It must be a 64-character hexadecimal string.');
 }
+
 const key = Buffer.from(keyHex, 'hex');
 
 const encryption = (text) => {

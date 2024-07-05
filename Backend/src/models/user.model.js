@@ -2,37 +2,6 @@ import mongoose, { Schema } from "mongoose";
 import bcrypt from'bcrypt'
 import  Jwt  from "jsonwebtoken";
 
-// const shopkeeperSchema = new Schema(
-//   {
-//     nameOfShop:{
-//       type:String,
-//       required:true
-//     },
-//     location:
-//     {
-//      latitude:{
-//       type:Number,
-//       required:true
-//      },
-//      longitude:
-//      {
-//       type:Number,
-//       required:true
-//      }
-//     },
-//     city:{
-//       type:String,
-//       required:true
-//     },
-//     fullAddress:
-//     {
-//       type:String,
-//       required:true
-//     }
-//   },{timestamps:true})
-
-// seller address
-
 const userSchema = new Schema(
 {
 

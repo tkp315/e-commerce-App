@@ -5,8 +5,8 @@ const productSchema = new Schema(
     thumbnail: {
       type: String,
     },
-    tags:  [{type:String}],
-    
+    tags: [{ type: String }],
+
     productImages: [{ type: String }],
     title: {
       type: String,
@@ -20,19 +20,21 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
-    subCategory:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "SubCategory",
-      },
-      company:{
-       type:String,
-       lowercase:true
-      },
-    
-    specifications:[ {
+    subCategory: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SubCategory",
+    },
+    company: {
       type: String,
-      required: true,
-    }],
+      lowercase: true,
+    },
+
+    specifications: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
@@ -56,7 +58,6 @@ const productSchema = new Schema(
   },
   { timestamps: true }
 );
-
 
 // productSchema.pre('save', function (next) {
 //     this.tags = this.tags.split("#")

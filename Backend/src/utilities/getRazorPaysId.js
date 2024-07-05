@@ -1,7 +1,6 @@
 import { Product } from "../models/product.model.js";
 import { User } from "../models/user.model.js";
 import { SellerAccount } from "../models/sellerAccount.model.js";
-import { decryption } from "./crypto.js";
 import mongoose from "mongoose";
 const getIds = async(pid,uid)=>
 {

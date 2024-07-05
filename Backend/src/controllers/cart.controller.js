@@ -6,7 +6,6 @@ import { User } from "../models/user.model.js";
 import { ApiResponse } from "../utilities/apiResponse.js";
 
 const addToCart = asyncHandlerFunction(async (req, res) => {
-
   const { productId } = req.body;
   const pid = new mongoose.Types.ObjectId(productId);
 
@@ -35,17 +34,17 @@ const addToCart = asyncHandlerFunction(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200,{ cartList: user.cartList },"One product added successfully"));
+    .json(
+      new ApiResponse(200,{ cartList: user.cartList },"One product added successfully"));
 });
 
 const viewCart = asyncHandlerFunction(async (req, res) => {
-
   const userId = req.user._id;
   const uid = new mongoose.Types.ObjectId(userId);
 
   const user = await User.findById(uid).populate({
     path: "cartList",
-    select: "title price description tags thumbnail"
+    select: "title price description tags thumbnail",
   });
 
   if (!user) {
@@ -64,11 +63,11 @@ const viewCart = asyncHandlerFunction(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, { user, cartItems }, "Fetched products successfully"));
+      new ApiResponse(200, { user, cartItems }, "Fetched products successfully")
+    );
 });
 
 const removeProduct = asyncHandlerFunction(async (req, res) => {
-
   const userId = req.user._id;
   const uid = new mongoose.Types.ObjectId(userId);
 
@@ -88,7 +87,13 @@ const removeProduct = asyncHandlerFunction(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200,{ cartList: user.cartList },"Product removed from cart successfully"));
+    .json(
+      new ApiResponse(
+        200,
+        { cartList: user.cartList },
+        "Product removed from cart successfully"
+      )
+    );
 });
 
 export { addToCart, viewCart, removeProduct };

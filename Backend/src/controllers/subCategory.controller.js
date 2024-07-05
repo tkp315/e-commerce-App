@@ -6,6 +6,7 @@ import { ApiResponse } from "../utilities/apiResponse.js";
 import { Category } from "../models/category.model.js";
 
 const createSubCategory = asyncHandlerFunction(async (req, res) => {
+
   const { catId, nameOfsubCat } = req.body;
   if (!catId) {
     throw new ApiError(401, "category is not found");
@@ -14,7 +15,9 @@ const createSubCategory = asyncHandlerFunction(async (req, res) => {
   if (!nameOfsubCat) {
     throw new ApiError(401, "category is not found");
   }
+
   const alreadySubCat = await SubCategory.findOne({ name: nameOfsubCat });
+
   if (alreadySubCat)
     throw new ApiError(401, "already this sub category existed");
 
@@ -22,11 +25,16 @@ const createSubCategory = asyncHandlerFunction(async (req, res) => {
     name: nameOfsubCat.toLowerCase(),
     category: new mongoose.Types.ObjectId(catId),
   });
-  const addInCategory = await Category.findByIdAndUpdate(new mongoose.Types.ObjectId(catId), {
-    $push: {
-      subCat: newSubCategory._id,
+
+  const addInCategory = await Category.findByIdAndUpdate(
+    new mongoose.Types.ObjectId(catId),
+    {
+      $push: {
+        subCat: newSubCategory._id,
+      },
     },
-  },{new:true});
+    { new: true }
+  );
 
   return res
     .status(200)
@@ -40,6 +48,7 @@ const createSubCategory = asyncHandlerFunction(async (req, res) => {
 });
 
 const allSubCategories = asyncHandlerFunction(async (req, res) => {
+
   const { catId } = req.body;
 
   if (!catId) {
@@ -47,11 +56,13 @@ const allSubCategories = asyncHandlerFunction(async (req, res) => {
   }
 
   const category = await Category.findById(catId);
+
   if (!category) {
     throw new ApiError(404, "Category not found");
   }
 
   const subCategoryIds = category.subCat;
+
   const subCategoryDetails = await SubCategory.find({
     _id: { $in: subCategoryIds },
   });
@@ -64,14 +75,17 @@ const allSubCategories = asyncHandlerFunction(async (req, res) => {
 });
 
 const getProducts = asyncHandlerFunction(async (req, res) => {
+
   const { subCatName } = req.body;
   const scn = subCatName.toLowerCase();
-  const subCategory = await SubCategory.findOne({name:scn}).populate("product")
   
-  if(!subCategory)
-{
-    throw new ApiError(401,"sub category is not found");
-}
+  const subCategory = await SubCategory.findOne({ name: scn }).populate(
+    "product"
+  );
+
+  if (!subCategory) {
+    throw new ApiError(401, "sub category is not found");
+  }
 
   return res
     .status(200)

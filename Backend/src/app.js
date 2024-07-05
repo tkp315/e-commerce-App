@@ -1,5 +1,5 @@
 import express, { json } from "express";
-import cors from'cors';
+import cors from "cors";
 import cookieParser from "cookie-parser";
 import router from "./routes/user.route.js";
 import { profileRoute } from "./routes/profile.route.js";
@@ -11,41 +11,29 @@ import { trackingRoute } from "./routes/tracking.route.js";
 
 const app = express();
 
+app.use(
+  cors({
+    origin: [process.env.CORS_ORIGIN],
+    credentials: true,
+  })
+);
 
-
-app.use(cors(
-    {
-        origin:[process.env.CORS_ORIGIN],
-        credentials:true
-    }
-))
-
-
-
-
-app.use(cookieParser())
-app.use(json(
-    {
-        limit:"200KB"
-    }
-))
+app.use(cookieParser());
+app.use(
+  json({
+    limit: "200KB",
+  })
+);
 app.use(express.static("public"));
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({ extended: true }));
 
+app.use("/api/v1/user", router);
+app.use("/api/v1/profile", profileRoute);
+app.use("/api/v1/address", addressRoute);
+app.use("/api/v1/product", productRoute);
+app.use("/api/v1/category", categoryRoute);
+app.use("/api/v1/tracking", trackingRoute);
 
+app.use("/api/v1/payment", paymentRoute);
 
-app.use('/api/v1/user',router);
-app.use('/api/v1/profile',profileRoute);
-app.use('/api/v1/address',addressRoute);
-app.use("/api/v1/product",productRoute)
-app.use("/api/v1/category",categoryRoute)
-app.use("/api/v1/tracking",trackingRoute)
-
-
-app.use("/api/v1/payment",paymentRoute)
-
-
-
-
-
-export default app
+export default app;

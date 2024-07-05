@@ -1,22 +1,21 @@
-import mongoose, { Schema} from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const ordersSchema = new Schema(
-{
-    products:
-    [
-        {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"Product"
-        }
+  {
+    products: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+      },
     ],
-    orderDetails:[
-        {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"OrderPlacement" 
-        }
-    ]
+    orderDetails: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "OrderPlacement",
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
-}
-,{timestamps:true})
-
-export const OrderList = mongoose.model("OrderList",ordersSchema);
+export const OrderList = mongoose.model("OrderList", ordersSchema);

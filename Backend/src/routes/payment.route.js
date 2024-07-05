@@ -8,5 +8,4 @@ paymentRoute.route("/orderplacement").post(verifyJWT,capturePayment)
 paymentRoute.route("/verify").post(verifyJWT,verifySignature)
 
 
-
 export {paymentRoute}

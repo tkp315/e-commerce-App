@@ -2,7 +2,6 @@ import crypto from "crypto";
 import mongoose from "mongoose";
 import asyncHandlerFunction from "../utilities/asyncHandler.js";
 import { razorPayInstance } from "../utilities/razorpay.js";
-import { getIds } from "../utilities/getRazorPaysId.js";
 import ApiError from "../utilities/apiError.js";
 import { Product } from "../models/product.model.js";
 import { OrderPlacement } from "../models/orderDetails.model.js";
@@ -10,27 +9,24 @@ import { User } from "../models/user.model.js";
 import { OrderList } from "../models/orders.model.js";
 import { DeliveryTracking } from "../models/deliveryTracking.model.js";
 import { ApiResponse } from "../utilities/apiResponse.js";
-import { SellerAccount } from "../models/sellerAccount.model.js";
 import { redirect } from "react-router-dom";
 import { Payment } from "../models/payment.model.js";
 
-// Capture payment and initiate the process
 
 const capturePayment = asyncHandlerFunction(async (req, res) => {
-  const { productId, quantity,addressId } = req.body;
-  if (!productId) {
-    throw new ApiError(401, "productId not found");
-  }
-
+  const { productId, quantity, addressId } = req.body;
   const userId = req.user._id;
-  if (!userId) {
-    throw new ApiError(401, "User not found");
-  }
-
   const pid = new mongoose.Types.ObjectId(productId);
   const uid = new mongoose.Types.ObjectId(userId);
   const aid = new mongoose.Types.ObjectId(addressId);
 
+  if (!productId) {
+    throw new ApiError(401, "productId not found");
+  }
+
+  if (!userId) {
+    throw new ApiError(401, "User not found");
+  }
 
   let productDetails;
   try {
@@ -46,9 +42,9 @@ const capturePayment = asyncHandlerFunction(async (req, res) => {
   const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET;
 
   const razorpayInstance = razorPayInstance(razorpayKeyId, razorpayKeySecret);
-   const sellerId = productDetails.seller;
-   const seller= await User.findById(sellerId);
-   const soldList = seller.soldProductList
+  const sellerId = productDetails.seller;
+  const seller = await User.findById(sellerId);
+  const soldList = seller.soldProductList;
   const amount = quantity * productDetails.price;
   const currency = "INR";
   if (amount < 1) {
@@ -72,8 +68,6 @@ const capturePayment = asyncHandlerFunction(async (req, res) => {
   try {
     const paymentResponse = await razorpayInstance.orders.create(options);
 
-    console.log(paymentResponse);
-
     const deliveryTracking = await DeliveryTracking.create({
       customer: uid,
       seller: productDetails.seller,
@@ -89,7 +83,7 @@ const capturePayment = asyncHandlerFunction(async (req, res) => {
       razorpayOrderId: paymentResponse.id,
       status: "created",
       deliveryStatus: deliveryTracking._id,
-      deliveryAddress:aid
+      deliveryAddress: aid,
     });
 
     const addInOrderList = await OrderList.findByIdAndUpdate(
@@ -108,16 +102,21 @@ const capturePayment = asyncHandlerFunction(async (req, res) => {
       {
         $push: {
           orderList: addInOrderList._id,
-
         },
       },
       { new: true }
     );
-   const addInSeller = await User.findByIdAndUpdate(sellerId,{
-    $push:{
-      soldProductList:addInOrderList._id
-    }
-   },{new:true})
+
+    const addInSeller = await User.findByIdAndUpdate(
+      sellerId,
+      {
+        $push: {
+          soldProductList: addInOrderList._id,
+        },
+      },
+      { new: true }
+    );
+
     return res.status(200).json(
       new ApiResponse(
         200,
@@ -128,40 +127,35 @@ const capturePayment = asyncHandlerFunction(async (req, res) => {
           newOrder,
           deliveryTracking,
           razorpayKeyId,
-          razorpayKeySecret
+          razorpayKeySecret,
         },
         "Order created "
       )
     );
-  } catch (error) {
+  } 
+  
+  catch (error) {
     console.log("Could not initiate order: ", error);
     throw new ApiError(500, "Could not initiate order");
   }
+
 });
 
 const verifySignature = asyncHandlerFunction(async (req, res) => {
-  console.log(req.body);
-  const user = req.user._id;
-  const uid = new mongoose.Types.ObjectId(user);
 
+  const razorpayOrderId = req.body.razorpay_order_id;
 
+  const razorpayPaymentId = req.body.razorpay_payment_id;
 
-  const razorpayOrderId =req.body.razorpay_order_id;
+  const order = await OrderPlacement.findOne({
+    razorpayOrderId: razorpayOrderId,
+  });
 
-  const razorpayPaymentId= req.body.razorpay_payment_id
-
-  const order = await OrderPlacement.findOne({razorpayOrderId:razorpayOrderId});
-
-  if(!order)
-  {
-    throw new ApiError(401,"order not found or razorpayId is wrong");
+  if (!order) {
+    throw new ApiError(401, "order not found or razorpayId is wrong");
   }
 
- 
-  console.log("This is orderId:",razorpayOrderId,"matches with :order_OU8omYyIo4kC0r")
-
-  let body = razorpayOrderId + "|" + razorpayPaymentId ;
-
+  let body = razorpayOrderId + "|" + razorpayPaymentId;
 
   const expectedSignature = crypto
     .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
@@ -173,24 +167,26 @@ const verifySignature = asyncHandlerFunction(async (req, res) => {
   let response = { signatureIsValid: false };
   if (expectedSignature === req.body.razorpay_signature) {
     response = { signatureIsValid: true };
-    // save in db 
-    
-    const newPaymentInfo = await Payment.create(
+
+    const newPaymentInfo = await Payment.create({
+      razorpay_order_id: razorpayOrderId,
+      razorpay_payment_id: razorpayPaymentId,
+      razorpay_signature: expectedSignature,
+    });
+    const addPayment = await order.updateOne(
       {
-        razorpay_order_id:razorpayOrderId,
-        razorpay_payment_id:razorpayPaymentId,
-        razorpay_signature:expectedSignature
-      }
-    )
-    const addPayment = await order.updateOne({
-      paymentInfo:newPaymentInfo._id},
-    {new:true})
+        paymentInfo: newPaymentInfo._id,
+      },
+      { new: true }
+    );
 
-
-    redirect(`http://localhost:3000/payment/verify?refrence=${ req.body.razorpay_payment_id}`)
+    redirect(
+      `http://localhost:3000/payment/verify?refrence=${req.body.razorpay_payment_id}`
+    );
   }
 
   res.send(response);
-  // return res.status(200).json( new ApiResponse(200,{},"Order Placed Successfully"))
+ 
 });
+
 export { capturePayment, verifySignature };
