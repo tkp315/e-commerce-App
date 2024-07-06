@@ -24,15 +24,24 @@ app.use(
     limit: "200KB",
   })
 );
+
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", process.env.CORS_ORIGIN);
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.header("Access-Control-Allow-Credentials", "true");
+    next();
+  });
+
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/v1/user", router);
-app.use("/api/v1/profile", profileRoute);
-app.use("/api/v1/address", addressRoute);
-app.use("/api/v1/product", productRoute);
-app.use("/api/v1/category", categoryRoute);
-app.use("/api/v1/tracking", trackingRoute);
+app.use(`/api/v1/user`, router);
+app.use(`/api/v1/profile`, profileRoute);
+app.use(`/api/v1/address`, addressRoute);
+app.use(`/api/v1/product`, productRoute);
+app.use(`/api/v1/category`, categoryRoute);
+app.use(`/api/v1/tracking`, trackingRoute);
 
 app.use("/api/v1/payment", paymentRoute);
 
