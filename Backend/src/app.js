@@ -12,12 +12,12 @@ import { trackingRoute } from "./routes/tracking.route.js";
 const app = express();
 
 app.use(cors({
-  origin: 'https://668a55667b536cacee070e46--keen-sable-a2f885.netlify.app',
+  origin: 'https://668a838e7b536cd80a070e4c--serene-otter-c96b73.netlify.app/',
   credentials: true
 }));
 
 app.options('*', cors({
-  origin: 'https://668a55667b536cacee070e46--keen-sable-a2f885.netlify.app',
+  origin: 'https://668a838e7b536cd80a070e4c--serene-otter-c96b73.netlify.app/',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true
 }));
