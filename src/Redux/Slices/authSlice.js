@@ -8,7 +8,7 @@ const initialState = {
     isLoggedIn: localStorage.getItem('isLoggedIn') === 'true' || false,
     role: localStorage.getItem('role') || "",
     // data: JSON.parse(localStorage.getItem('data')) || {},
-    profilePhoto:localStorage.getItem("image")||""
+    // profilePhoto:localStorage.getItem("image")||""
 };
 
 // Thunk: used to delay the actions
@@ -192,13 +192,13 @@ const authSlice = createSlice({
             // localStorage.setItem("data",JSON.stringify(action?.payload?.data?.addressList));
             localStorage.setItem("isLoggedIn",true);
             localStorage.setItem("role",action?.payload?.data?.userInDB?.role)
-            localStorage.setItem("image",action?.payload?.data?.userInDB?.profilePhoto)
+            // localStorage.setItem("image",action?.payload?.data?.userInDB?.profilePhoto)
         //    state.data= action.payload.data.addressList
            
 
            state.isLoggedIn=true;
            state.role =action?.payload?.data?.userInDB?.role
-           state.profilePhoto=action?.payload?.data?.userInDB?.profilePhoto
+        //    state.profilePhoto=action?.payload?.data?.userInDB?.profilePhoto
 
         })
         .addCase(logoutThunk.fulfilled,(state)=>
@@ -207,7 +207,7 @@ const authSlice = createSlice({
             state.data={};
             state.isLoggedIn=false;
             state.role ="";
-            state.profilePhoto="";
+            // state.profilePhoto="";
 
         })
        

@@ -10,6 +10,7 @@ import { ApiResponse } from "../utilities/apiResponse.js";
 import { newOTP } from "../utilities/otpGenerator.js";
 import { sendMail } from "../utilities/mailSender.js";
 
+
 function validateEmail(email) {
   let pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return pattern.test(email);
@@ -118,13 +119,15 @@ const userRegistration = asyncHandlerFunction(async (req, res) => {
     } 
   }
   
-  const profilePhotoLocalStorage = await req.file?.path;
+  // const profilePhotoLocalStorage = await req.file?.path;
  
-  const profilePhoto = await uploadOnCloudinary(profilePhotoLocalStorage);
+  // const profilePhoto = await uploadOnCloudinary(profilePhotoLocalStorage);
+  // console.log("uploded on cloudinary",profilePhoto);
 
-  if (!profilePhoto) {
-    throw new ApiError(400, "profile photo is not uploaded on cloudinary");
-  }
+  // if (!profilePhoto) {
+  //   throw new ApiError(400, "profile photo is not uploaded on cloudinary");
+  // }
+
   
   const user = await User.create({
     firstName,
@@ -132,7 +135,7 @@ const userRegistration = asyncHandlerFunction(async (req, res) => {
     email,
     password,
     phone_No,
-    profilePhoto: profilePhoto ? profilePhoto.url : "",
+    // profilePhoto: profilePhoto ? profilePhoto.url : "",
     role,
     otp,
   });
@@ -196,15 +199,16 @@ const userLogin = asyncHandlerFunction(async (req, res) => {
   }
  
   const options = {
-    httpOnly: true,
-    // secure:true
+    
+    secure:process.env.NODE_ENV==='production',
+    sameSite:'none'
   };
 
   sendMail("user is logged in ", email, "LogIn");
   return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken,options)
+    .cookie("refreshToken", refreshToken,options)
     .json(
       new ApiResponse(
         200,
@@ -228,14 +232,15 @@ const userLogout = asyncHandlerFunction(async (req, res) => {
   );
 
   const options = {
-    httpOnly: true,
-    // secure:true
+  
+    secure:process.env.NODE_ENV==='production',
+    sameSite: 'none',
   };
 
   return res
     .status(200)
-    .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", options)
+    .clearCookie("accessToken",options)
+    .clearCookie("refreshToken",options)
     .json(new ApiResponse(200, {}, "User logged out", true));
 });
 

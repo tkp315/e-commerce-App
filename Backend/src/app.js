@@ -11,12 +11,17 @@ import { trackingRoute } from "./routes/tracking.route.js";
 
 const app = express();
 
-app.use(
-  cors({
-    origin: [process.env.CORS_ORIGIN],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: 'https://668a55667b536cacee070e46--keen-sable-a2f885.netlify.app',
+  credentials: true
+}));
+
+app.options('*', cors({
+  origin: 'https://668a55667b536cacee070e46--keen-sable-a2f885.netlify.app',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true
+}));
+
 
 app.use(cookieParser());
 app.use(
@@ -25,13 +30,6 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", process.env.CORS_ORIGIN);
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    res.header("Access-Control-Allow-Credentials", "true");
-    next();
-  });
 
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));

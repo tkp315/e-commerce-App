@@ -42,10 +42,10 @@ email:
     type:String,
     required: true
 },
-profilePhoto: 
-{
-  type:String // url from cloudinary
-},
+// profilePhoto: 
+// {
+//   type:String // url from cloudinary
+// },
 refreshToken:
 {
     type:String
