@@ -23,7 +23,7 @@ function Signup() {
     password: "",
     phone_No: "",
     otp: "",
-    // profilePhoto: "",
+    profilePhoto: "",
   });
 
   function handleUserInput(e) {
@@ -35,24 +35,24 @@ function Signup() {
 
     console.log(`${name}:${value}`);
   }
-  // function imageHandler(e) {
-  //   e.preventDefault();
-  //   const uploadedImage = e.target.files[0];
-  //   console.log(e.target.files);
+  function imageHandler(e) {
+    e.preventDefault();
+    const uploadedImage = e.target.files[0];
+    console.log(e.target.files);
 
-  //   if (uploadedImage) {
-  //     setSignupData({
-  //       ...signupData,
-  //       profilePhoto: uploadedImage,
-  //     });
-  //     const fileReader = new FileReader();
-  //     fileReader.readAsDataURL(uploadedImage);
-  //     fileReader.addEventListener("load", function () {
-  //       console.log(this.result);
-  //       setPreviewImage(this.result);
-  //     });
-  //   }
-  // }
+    if (uploadedImage) {
+      setSignupData({
+        ...signupData,
+        profilePhoto: uploadedImage,
+      });
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(uploadedImage);
+      fileReader.addEventListener("load", function () {
+        console.log(this.result);
+        setPreviewImage(this.result);
+      });
+    }
+  }
 
   // send data through axios
   async function createNewAccount(e)
@@ -70,7 +70,7 @@ function Signup() {
       toast.error("Invalid email id");
       return 
     }
-
+     if(signupData.profilePhoto==="")toast.error("image is not found")
    const formData = new FormData();
    formData.append("firstName",signupData.firstName);
    formData.append("lastName",signupData.lastName);
@@ -79,7 +79,7 @@ function Signup() {
    formData.append("confirmPassword",signupData.confirmPassword);
    formData.append("role",signupData.role);
    formData.append("phone_No",signupData.phone_No);
-  //  formData.append("profilePhoto",signupData.profilePhoto);
+   formData.append("profilePhoto",signupData.profilePhoto);
    formData.append("otp",signupData.otp);
 
 console.log(formData)
@@ -105,7 +105,7 @@ console.log(formData)
     }
    )
 
-  //  setPreviewImage("");
+   setPreviewImage("");
 
 
 
@@ -130,7 +130,25 @@ console.log(formData)
         <div className="text-3xl text-left font-semibold">Registration</div>
         <div className="border border-[#45b06a]"></div>
         
-
+        <label htmlFor="profilePhoto" className=" cursor-pointer">
+          {previewImage ? (
+            <img
+              className="w-24 h-24 rounded-full m-auto"
+              src={previewImage}
+              alt="preview_image"
+            ></img>
+          ) : (
+            <BsPersonCircle className="w-16 h-16 rounded-full m-auto"></BsPersonCircle>
+          )}
+        </label>
+        <input
+          type="file"
+          id="profilePhoto"
+          className="hidden"
+          accept=".jpg, .jpeg, .png, .svg"
+          name="profilePhoto"
+          onChange={imageHandler}
+        ></input>
         
           <div className="flex flex-col gap-1">
             <label htmlFor="firstName" className="font-serif">First Name</label>

@@ -12,13 +12,13 @@ import { logoutThunk } from "../Redux/Slices/authSlice";
 function HomeLayout({ children }) {
     const [cart,setCart] = useState("");
     const isLoggedIn = useSelector((state)=>state.auth.isLoggedIn);
-    // const image = useSelector((state)=>state.auth.profilePhoto);
+    const image = useSelector((state)=>state.auth.profilePhoto);
     const role = useSelector((state)=>state.auth.role);
     const totalCartItems= useSelector((state)=>state.product.totalCartItems)
     const totalCartPrice = useSelector((state)=>state.product.totalCartPrice);
     console.log(totalCartItems)
     
-    // console.log(image)
+    console.log(image)
     const navigate = useNavigate();
     const dispatch = useDispatch();
    async function logoutUser(e)
@@ -214,7 +214,7 @@ isLoggedIn?<Link to="/logout"><button onClick={logoutUser} className= "btn btn-s
       <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
         <div className="rounded-full relative text-2xl" >
          {
-            // image?<img src={image} alt="none"></img>
+            image?<img src={image} alt="none"></img>:
             <FaUserCircle></FaUserCircle>
          }
         </div>
