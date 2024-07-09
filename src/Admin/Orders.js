@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom';
+
 import { adminAllOrders } from '../Redux/Slices/trakingSlice';
 import OrderCard from './OrderCard';
 import { HomeLayout } from '../Layouts/HomeLayout';
@@ -8,19 +8,19 @@ import { HomeLayout } from '../Layouts/HomeLayout';
 
  function Orders() {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+ 
     const[orders,setOrders]=useState([]);
 
     async function getAllOrders()
     {
         const res = await dispatch(adminAllOrders());
         const orderDetails = res.payload.data.orders
-        console.log(res.payload.data);
         setOrders(orderDetails)
     }
    useEffect(()=>
 {
     getAllOrders()
+// eslint-disable-next-line react-hooks/exhaustive-deps
 },[dispatch])
   return (
     <HomeLayout>

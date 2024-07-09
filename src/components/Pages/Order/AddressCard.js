@@ -14,11 +14,9 @@ function AddressCard({ state, idx }) {
             <li>{state.ward}</li>
             <li>{state.pincode}</li>
             <li>{state.contact}</li>
-
           </ul>
           <button className="btn bg-[#45b06a]">Edit</button>
           <button className="btn  bg-red-500 ml-3">Remove</button>
-
         </div>
       </div>
     </div>

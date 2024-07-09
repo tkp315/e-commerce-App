@@ -38,7 +38,7 @@ const sendOTP = asyncHandlerFunction(async (req, res) => {
     createdAt: Date.now() + 10 * 1000 * 60,
   });
 
-  const otpTosend = saveIndb.otp;
+  
 
   if (!saveIndb) {
     throw new ApiError(401, "otp not saved");

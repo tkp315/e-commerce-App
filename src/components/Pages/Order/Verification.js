@@ -10,20 +10,21 @@ function Verification()
     
     async function sendData()
     {
-     const res = await dispatch(verification());
-     console.log(res);
+      await dispatch(verification());
+   
     }
     useEffect(()=>
     {
-
+       sendData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[dispatch])
 return (<div className="min-h-[100vh] flex justify-center items-center  bg-slate-500 text-3xl text-white">
-     
+      
      <div>
         Payment Successfull
      </div>
      <div>
-        ref_No
+        {ref_No}
      </div>
 </div>)
 }

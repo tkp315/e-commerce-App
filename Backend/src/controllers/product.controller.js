@@ -20,7 +20,7 @@ const createProduct = asyncHandlerFunction(async (req, res) => {
     tags,
     subCatId,
   } = req.body;
-
+  console.log("This is object of files",req.files);
   const userId = req.user._id;
   const uid = new mongoose.Types.ObjectId(userId);
 
@@ -47,8 +47,8 @@ const createProduct = asyncHandlerFunction(async (req, res) => {
   if (!req.files || req.files.length === 0) {
     throw new ApiError(401, "photos are not found in local storage");
   }
-
-  const thumbnailLocalStorage = req.files.thumbnail[0]?.path;
+  if(req.files|| req.files.length!==0)console.log("photos are found in local storage");
+  const thumbnailLocalStorage = await req.files.thumbnail[0]?.path;
   
   if (!thumbnailLocalStorage) {
     throw new ApiError(401, "Thumbnail not found");
@@ -69,7 +69,7 @@ const createProduct = asyncHandlerFunction(async (req, res) => {
   }
 
   const addProduct = await Product.create({
-    productImages: productImages.map((img) => img.url),
+    productImages: productImages.map((img) => img.secure_url),
     title: title,
     company: company,
     price: price,
@@ -79,7 +79,7 @@ const createProduct = asyncHandlerFunction(async (req, res) => {
     subCategory: subCatId,
     seller: userId,
     tags: parsedTag.map((e) => e),
-    thumbnail: thumbnail?.url,
+    thumbnail: thumbnail?.secure_url,
   });
   
   const addInSellerAccount = await User.findByIdAndUpdate(

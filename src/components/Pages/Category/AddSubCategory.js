@@ -1,12 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import { allCategory, createSubCategories } from "../../../Redux/Slices/categorySlice";
 import { useState ,useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 
 
 function AddSubCategory()
 {
     const dataOfCategory = useSelector((state) => state.categories).categories;
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [data,setData]=useState(
         {
             catId:"", 
@@ -17,7 +19,8 @@ async function subcategoryHandler(e)
 {
     e.preventDefault();
     const res =await dispatch(createSubCategories({catId:data.catId,nameOfsubCat:data.nameOfsubCat}));
-    console.log(res);
+    if(res.payload?.statusCode === 200)navigate("/")
+
 }
 
 async function fetchCategories() {
@@ -25,6 +28,7 @@ async function fetchCategories() {
   }
   useEffect(() => {
     fetchCategories();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
 

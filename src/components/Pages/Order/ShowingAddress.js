@@ -14,7 +14,6 @@ async function showAddresses(e)
 {
 
     const res = await dispatch(getAllAddress());
-    console.log(res?.payload?.data?.addresses.addressList);
     if((res?.payload?.data?.addresses.addressList).length===0)
     {
         navigate("/user/add-address")
@@ -25,6 +24,7 @@ async function showAddresses(e)
     }
 }
  
+// eslint-disable-next-line react-hooks/exhaustive-deps
 useEffect(()=>{showAddresses()},[dispatch])
 
   return (

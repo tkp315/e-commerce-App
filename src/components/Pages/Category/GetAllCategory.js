@@ -1,35 +1,25 @@
-import { useDispatch,useSelector} from "react-redux"
+import { useDispatch } from "react-redux";
 import { allCategory } from "../../../Redux/Slices/categorySlice";
 import { useEffect } from "react";
 
-function GetAllCategory()
-{
-    const dispatch = useDispatch();
-  
-    async function cat()
-  {
-    const res=  await dispatch(allCategory());
-    console.log(res)
-  }
-   
-  useEffect(()=>
-{
-    cat()
-},[])
-  
-    // if (categories.length===0) {
-    //   return <div>Loading...</div>;
-    // }
+function GetAllCategory() {
+  const dispatch = useDispatch();
 
-    // const data = useSelector((state)=>state.categories)
-    // console.log(data)
-return(
-    <>
-      <div>
-      <h1>Categories</h1>
-      <button className="btn btn-primary" onClick={cat}>Get All Category</button>
-    </div>
-    </>
-)
+  async function cat() {
+    await dispatch(allCategory());
+  }
+
+  useEffect(() => {
+    cat();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
+
+  // if (categories.length===0) {
+  //   return <div>Loading...</div>;
+  // }
+
+  // const data = useSelector((state)=>state.categories)
+  // console.log(data)
+  return <></>;
 }
-export default GetAllCategory
+export default GetAllCategory;

@@ -26,10 +26,9 @@ function Address() {
         contact: data.contact,
       })
     );
-    console.log(res);
-    if(res.payload.statusCode===200)
-    {
-        navigate("/user/address/details")
+
+    if (res.payload.statusCode === 200) {
+      navigate("/user/address/details");
     }
   }
 
@@ -64,7 +63,6 @@ function Address() {
               <input
                 id="ward"
                 type="text"
-                // placeholder="Price"
                 name="ward"
                 onChange={handleUserInput}
                 className="p-3 border border-[#45b06a]  outline-none  appearance-none"
@@ -91,7 +89,6 @@ function Address() {
               <input
                 id="contact"
                 type="number"
-                // placeholder="Description"
                 name="contact"
                 onChange={handleUserInput}
                 className="p-3 border border-[#45b06a]  outline-none "
