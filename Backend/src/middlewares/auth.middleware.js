@@ -10,11 +10,13 @@ const verifyJWT = asyncHandlerFunction(async (req, res, next) => {
     const token =
       req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
-
+    if(!token){
+      res.redirect("/api/v1/user/login");
+    }
       console.log(req.cookies);
 
     if (!token) {
-      throw new ApiError(401, "there is mistake");
+      throw new ApiError(401, "Invalid Token");
     }
 
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
@@ -24,12 +26,14 @@ const verifyJWT = asyncHandlerFunction(async (req, res, next) => {
     );
 
     if (!user) {
-      // redirect("http://localhost:3000/login")
       
       throw new ApiError(401, "Invalid Access Token");
     }
 
     req.user = user; 
+    if(!req.user){
+      res.redirect("/api/v1/user/login");
+    }
 
     next();
 

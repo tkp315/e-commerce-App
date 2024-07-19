@@ -22,7 +22,7 @@ function Account() {
   }
 
   return (
-    <div className="flex justify-center items-center bg-[#45b06a]">
+    <div className="flex justify-center items-center  bg-[#45b06a]">
       <form
         onSubmit={accountCreation}
         className="bg-white flex flex-col gap-5 w-[500px] mt-10 p-10"

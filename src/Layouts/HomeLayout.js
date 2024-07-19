@@ -82,9 +82,7 @@ function HomeLayout({ children }) {
                     ""
                   )}
 
-                  <li>
-                    <Link to="/product/add-product">Add Product</Link>
-                  </li>
+                  
                   {role === "Seller" ? (
                     <li>
                       <Link to="/product/add-product">Add Product</Link>
@@ -93,7 +91,7 @@ function HomeLayout({ children }) {
                     ""
                   )}
 
-                  {role === "Seller" ? (
+                  {role === "Admin" ? (
                     <li>
                       <Link to="/category/create-subcategory">
                         Add Sub-Category
